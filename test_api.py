@@ -28,8 +28,11 @@ def test_convert_currency_currect_input(client):
     for amount in amounts:
         response = client.get(f"{SERVER_URL}/convert?rub_amount={amount}")
         assert response.status_code == expected_status_code
-        assert 'usd_amount' in response.json().keys()
+        json = response.json()
+        assert 'usd_amount' in json.keys()
+        assert isinstance(json['usd_amount'], float)
 
 def test_client_convert_currency():
     usd_amount = convert_currency('100.0')
     assert isinstance(usd_amount, float)
+    assert usd_amount > 0
