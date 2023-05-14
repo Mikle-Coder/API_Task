@@ -16,7 +16,7 @@ def test_get_usd_rate():
 def test_convert_currency_invalid_input(client):
     expected_json = {"detail":[{"loc":["query","rub_amount"],"msg":"string does not match regex \"^[0-9]+[,.][0-9]+$\"","type":"value_error.str.regex","ctx":{"pattern":"^[0-9]+[,.][0-9]+$"}}]}
     expected_status_code = 422
-    amounts = ['abc', '100', '']
+    amounts = ['abc', '100', '100-00','']
     for amount in amounts:
         response = client.get(f"{SERVER_URL}/convert?rub_amount={amount}")
         assert response.status_code == expected_status_code
@@ -24,7 +24,7 @@ def test_convert_currency_invalid_input(client):
 
 def test_convert_currency_currect_input(client):
     expected_status_code = 200
-    amounts = ['123.45', '123,45']
+    amounts = ['100.00', '100,00']
     for amount in amounts:
         response = client.get(f"{SERVER_URL}/convert?rub_amount={amount}")
         assert response.status_code == expected_status_code
@@ -33,6 +33,6 @@ def test_convert_currency_currect_input(client):
         assert isinstance(json['usd_amount'], float)
 
 def test_client_convert_currency():
-    usd_amount = convert_currency('100.0')
+    usd_amount = convert_currency('100.00')
     assert isinstance(usd_amount, float)
     assert usd_amount > 0
